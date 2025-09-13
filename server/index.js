@@ -35,7 +35,7 @@ const limiter = rateLimit({
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: process.env.CLIENT_URL || 'http://localhost:5173' || 'https://blog-admin-1-nmh6.onrender.com/',
   credentials: true,
 }));
 
