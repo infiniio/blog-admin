@@ -12,7 +12,7 @@ export default defineConfig({
       '/api': {
         target: 'https://blog-admin-i1kr.onrender.com',
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
     },
   },
