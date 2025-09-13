@@ -8,12 +8,12 @@ export default defineConfig({
     exclude: ['lucide-react'],
   },
   server: {
-    proxy: {
-      '/api': {
-        target: 'https://blog-admin-i1kr.onrender.com',
-        changeOrigin: true,
-        secure: true,
-      },
-    },
+    // proxy: {
+    //   '/api': {
+    //     target: 'https://blog-admin-i1kr.onrender.com',
+    //     changeOrigin: true,
+    //     secure: true,
+    //   },
+    // },
   },
 });

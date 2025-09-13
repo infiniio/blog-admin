@@ -11,7 +11,7 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -56,7 +56,7 @@ export const useAuthProvider = () => {
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(`${BASE_URL}${"/api/auth/login"}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -89,7 +89,7 @@ export const useAuthProvider = () => {
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     };
   
-    const response = await fetch(url, { ...options, headers });
+    const response = await fetch(`${BASE_URL}${url}`, { ...options, headers });
   
     // Handle token expiry (e.g., 401 Unauthorized)
     if (response.status === 401) {
