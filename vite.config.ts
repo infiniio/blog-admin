@@ -10,7 +10,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        target: 'https://blog-admin-i1kr.onrender.com',
         changeOrigin: true,
         secure: false,
       },
