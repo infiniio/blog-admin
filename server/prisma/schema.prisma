@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(cuid())
+  email      String   @unique
+  name       String
+  password   String
+  role       Role     @default(AUTHOR)
+  avatar     String?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  lastLogin  DateTime? @map("last_login")
+  
+  // Relations
+  posts      Post[]
+  
+  @@map("users")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  color       String   @default("#3b82f6")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  posts       Post[]
+  
+  @@map("categories")
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  color     String   @default("#3b82f6")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  posts     PostTag[]
+  
+  @@map("tags")
+}
+
+model Post {
+  id              String      @id @default(cuid())
+  title           String
+  slug            String      @unique
+  excerpt         String
+  content         String
+  status          PostStatus  @default(DRAFT)
+  featuredImage   String?     @map("featured_image")
+  seoTitle        String?     @map("seo_title")
+  seoDescription  String?     @map("seo_description")
+  seoKeywords     String?     @map("seo_keywords")
+  scheduledAt     DateTime?   @map("scheduled_at")
+  publishedAt     DateTime?   @map("published_at")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+  deletedAt       DateTime?   @map("deletedAt")
+  viewCount       Int         @default(0) @map("view_count")
+  likeCount       Int         @default(0) @map("like_count")
+  importedFrom    String?     @map("imported_from")
+  
+  // Relations
+  authorId        String      @map("author_id")
+  author          User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  categoryId      String?     @map("category_id")
+  category        Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags            PostTag[]
+  
+  @@map("posts")
+}
+
+model PostTag {
+  id     String @id @default(cuid())
+  postId String @map("post_id")
+  tagId  String @map("tag_id")
+  
+  // Relations
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  
+  @@unique([postId, tagId])
+  @@map("post_tags")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  AUTHOR
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
